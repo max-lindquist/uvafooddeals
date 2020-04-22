@@ -1,6 +1,8 @@
+<<<<<<< HEAD
 <?php session_start(); ?>
 
 <?php
+    include('navbar.html');
     include('createevent.html');
 ?>
 
@@ -38,6 +40,4 @@
 
 
     }
-
-
 ?>
