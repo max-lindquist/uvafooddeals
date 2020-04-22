@@ -1,4 +1,5 @@
 <?php 
     require("navbar.html");
-    require("createevent.html");
+    require("logout.html");
+
 ?>
