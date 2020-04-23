@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 <?php session_start(); ?>
 
 <?php
-    include('navbar.html');
     include('createevent.html');
 ?>
 
@@ -14,6 +12,7 @@
         $startTime = $_POST['StartTime'];
         $endTime = $_POST['EndTime'];
         $location = $_POST['Location'];
+        $exact_date = $_POST['Date'];
         $userID = 300000;
         $total_votes = 0;
 
@@ -36,8 +35,53 @@
             // Trying to get the eventID and to use it to insert into the one-time event table
             // Will do this for the recurring event as well
 
+            $query = "SELECT MAX(eventID) as maximum FROM event";
+            $result = $db->query($query);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $eventID = $row['maximum']; // This gives us the unique eventID for whatever was just posted
+            $result->closeCursor();
+
+            // Inserting into the one_time_event table
+
+            $query = "INSERT INTO one_time_event(eventID,exact_date) VALUES (:eventID,:exact_date)";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':eventID', $eventID);
+            $statement->bindValue(':exact_date', $exact_date);
+            $statement->execute();
+            $statement->closeCursor();
+
         }
+        else // This is if the event is recurring (one-time and recurring are the only 2 options)
+        {
+            // Getting the eventID of the event that was just posted
+
+            $query = "SELECT MAX(eventID) as maximum FROM event";
+            $result = $db->query($query);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $eventID = $row['maximum']; // This gives us the unique eventID for whatever was just posted
+            $result->closeCursor();
+
+            //Inserting into the recurring_event_days_occurring table (using dummy data right now!!!)
+            $day = "Monday";
+
+            $query = "INSERT INTO recurring_event_days_occurring(eventID,day) VALUES (:eventID,:day)";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':eventID', $eventID);
+            $statement->bindValue(':day', $day);
+            $statement->execute();
+            $statement->closeCursor();
 
 
+            // Inserting into the recurring_event table
+            $timing = "weekly";
+            $query = "INSERT INTO recurring_event(eventID,timing) VALUES (:eventID,:timing)";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':eventID', $eventID);
+            $statement->bindValue(':timing', $timing);
+            $statement->execute();
+            $statement->closeCursor();
+        }
     }
+
+
 ?>
