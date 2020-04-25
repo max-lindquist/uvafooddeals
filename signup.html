@@ -14,7 +14,7 @@
         <br>
         <div class="container">
             <h1>Sign Up</h1>
-            <form>
+            <form action="signup.php" method='POST'>
                 <div class="form-group">
                     <label for="username">Username: </label>
                     <input type="text" class="form-control" id="username" name="username" placeholder="Enter a username." autofocus required />
@@ -29,6 +29,8 @@
                     <label for="confirmPwd">Confirm Password: </label>
                     <input type="password" class="form-control" id="confirmPwd" name="confirmPwd" placeholder="Confirm Password" required/>
                 </div>
+
+                <div id="errorMsg"></div>
 
                 <button class="btn btn-primary" type="submit">Submit</button>
             </form>

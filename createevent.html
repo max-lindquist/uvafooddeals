@@ -27,7 +27,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Date: </label>
+                    <label>Date (Please use format YYYY-MM-DD): </label>
                     <input type="date" class="form-control" name = "Date" required/>
                 </div>
 
@@ -42,11 +42,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Description: </label>
-                    <input type="text" class="form-control" name = "Description" required/>
-                </div>
-
-                <div class="form-group">
                     <label>Restaurant Name: </label>
                     <input type="text" class="form-control" name = "Restaurant" required/>
                 </div>
@@ -55,8 +50,23 @@
                     <label>Timing: </label>
                     <select class="form-control" name = "Timing">
                         <option>One-Time Event</option>
-                        <option>Recurring</option>
+                        <option>Daily</option>
+                        <option>Weekly</option>
+                        <option>Monthly</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <!-- Reference: https://html5-tutorial.net/forms/checkboxes/ -->
+                    <!-- Reference: https://stackoverflow.com/questions/4997252/get-post-from-multiple-checkboxes -->
+                    <label>If recurring event, on which days does it occur?</label><br>
+                    <input type="checkbox" name="days[]" value="Mon">Monday<br>
+                    <input type="checkbox" name="days[]" value="Tues">Tuesday<br>
+                    <input type="checkbox" name="days[]" value="Wed">Wednesday<br>
+                    <input type="checkbox" name="days[]" value="Thurs">Thursday<br>
+                    <input type="checkbox" name="days[]" value="Fri">Friday<br>
+                    <input type="checkbox" name="days[]" value="Sat">Saturday<br>
+                    <input type="checkbox" name="days[]" value="Sun">Sunday<br>
                 </div>
 
                 <input type="submit" class="btn btn-primary"></input><br><br>

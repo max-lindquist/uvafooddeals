@@ -6,29 +6,82 @@
 
 <?php
     require('uvafooddeals-connectdb.php');
-    $query = "SELECT * FROM event";
-    $result = $db->query($query);
-    $num_rows = $result->rowCount();
 
-    if ($num_rows == 0)
-        {
+    $query = "SELECT COUNT(*) FROM event";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $num_rows = $statement->fetchAll(); 
+    $statement->closeCursor();
+
+    foreach ($num_rows as $num_row)
+    {
+        if ($num_row['COUNT(*)'] == 0) {
             echo "<center><h4>You have no events! Add an event by clicking the button above.</h4></center>";
         }
 
     else {
+    $query = "SELECT * FROM event";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(); 
+    $statement->closeCursor();
+
     // output data of each row
     $count = 0;
     echo "<br>";
-    while($row = $result->fetch(PDO::FETCH_ASSOC))
+    foreach ($results as $result)
         {
-            $eventID = $row{"eventID"};
-            $location = $row["location"];
-            $startTime = $row["startTime"];
-            $endTime = $row["endTime"];
-            $userID = $row["userID"];
-            $total_votes = $row["total_votes"];
-            $event_name = $row["event_name"];
-            // echo "<center>$eventID, $location, $startTime, $endTime, $userID, $total_votes</center>";
+            $eventID = $result["eventID"];
+            $location = $result["location"];
+            $startTime = $result["startTime"];
+            $endTime = $result["endTime"];
+            $userID = $result["userID"];
+            $total_votes = $result["total_votes"];
+            $event_name = $result["event_name"];
+
+            $isOneTime = false;
+            $exact_date = '';
+
+            $timing = '';
+            $days = array();
+
+            // If one time event
+            $query = "SELECT * FROM one_time_event";
+            $statement = $db->prepare($query);
+            $statement->execute();
+            $results_onetime = $statement->fetchAll();
+            $statement->closeCursor();
+            foreach($results_onetime as $result_onetime)
+            {
+                if ($eventID == $result_onetime['eventID']) {
+                    $exact_date = $result_onetime['exact_date'];
+                    $isOneTime = true;
+                }
+            }
+
+            if ($isOneTime == false) {
+                $query = "SELECT * FROM recurring_event";
+                $statement = $db->prepare($query);
+                $statement->execute();
+                $results_rec = $statement->fetchAll();
+                $statement->closeCursor();
+                foreach ($results_rec as $result_rec) {
+                    if ($eventID == $result_rec['eventID']) {
+                        $timing = $result_rec['timing'];
+                    }
+                }
+
+                $query = "SELECT * FROM recurring_event_days_occurring";
+                $statement = $db->prepare($query);
+                $statement->execute();
+                $results_d = $statement->fetchAll();
+                $statement->closeCursor();
+                foreach ($results_d as $result_d) {
+                    if ($eventID == $result_d['eventID']) {
+                        array_push($days, $result_d['day']);
+                    }
+                }
+            }
 
             /**** ADD EVENTS TO THE PAGE *****/
             echo "<div class='container'>";
@@ -38,8 +91,19 @@
                         <p>Location: " . $location . "</p>
                         <p>Start time: " . $startTime . "</p>
                         <p>End time: " . $endTime . "</p>
-                        <p>Votes: " . $total_votes . "</p>
-                        <form action='uvafooddeals.php' method='post'>
+                        <p>Votes: " . $total_votes . "</p>";
+            if ($isOneTime) {
+                echo "<p>Date: " . $exact_date . "</p>";
+            } else {
+                echo "<p>Timing: " . $timing . "</p>";
+                echo "<p>Days: ";
+                foreach ($days as $day) {
+                    echo $day . " ";
+                }
+                echo "</p>";
+            }
+
+            echo "<form action='uvafooddeals.php' method='post'>
                             <button class='btn btn-primary' type='submit' name='" . $eventID . "upvote'>Upvote</button>
                             <button class='btn btn-danger' type='submit' name='" . $eventID . "downvote'>Downvote</button>
                             <input type='hidden' id='eventID' name='eventID' value=$eventID>
@@ -63,19 +127,6 @@
             }
         }
     }
-    
-        
-/*
-            echo " <div class='card'> 
-                        <div class='card-body'> 
-                            <p class='ratingReview'>" . formatStarsReview($result['numStars']) . "</p>
-                            <p>" . $result['userText'] . "</p> 
-                        </div> 
-                   </div> 
-                   <br> ";
-            // echo "userText: " . $result['userText'] . "numStars: " . $result['numStars'] . "<br/>";
-    }
-    */
 ?>
 
 <?php
@@ -185,4 +236,5 @@
         }
         header('Location: uvafooddeals.php'); // refresh after updating vote
     }
+}
 ?>
