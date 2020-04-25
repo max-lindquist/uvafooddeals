@@ -14,19 +14,21 @@
         $endTime = $_POST['EndTime'];
         $location = $_POST['Location'];
         $exact_date = $_POST['Date'];
+        $event_name = $_POST['Name'];
         $userID = 300000;
         $total_votes = 0;
 
         // creating an event
         // the eventID is auto incremented
         // right now, the userID is a static value (since we haven't implemented users yet)
-        $query = "INSERT INTO event (startTime, endTime, location, userID, total_votes) VALUES (:startTime,:endTime,:location,:userID,:total_votes)";
+        $query = "INSERT INTO event (startTime, endTime, location, userID, total_votes, event_name) VALUES (:startTime,:endTime,:location,:userID,:total_votes,:event_name)";
         $statement = $db->prepare($query);
         $statement->bindValue(':startTime', $startTime);
         $statement->bindValue(':endTime', $endTime);
         $statement->bindValue(':location', $location);
         $statement->bindValue(':userID', $userID);
         $statement->bindValue(':total_votes', $total_votes);
+        $statement->bindValue(':event_name', $event_name);
         $statement->execute();
         $statement->closeCursor();
 
