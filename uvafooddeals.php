@@ -13,97 +13,92 @@
     $num_rows = $statement->fetchAll(); 
     $statement->closeCursor();
 
-    foreach ($num_rows as $num_row)
-    {
+    foreach ($num_rows as $num_row) {
         if ($num_row['COUNT(*)'] == 0) {
             echo "<center><h4>You have no events! Add an event by clicking the button above.</h4></center>";
-        }
-
-    else {
-    $query = "SELECT * FROM event";
-    $statement = $db->prepare($query);
-    $statement->execute();
-    $results = $statement->fetchAll(); 
-    $statement->closeCursor();
-
-    // output data of each row
-    $count = 0;
-    echo "<br>";
-    foreach ($results as $result)
-        {
-            $eventID = $result["eventID"];
-            $location = $result["location"];
-            $startTime = $result["startTime"];
-            $endTime = $result["endTime"];
-            $userID = $result["userID"];
-            $total_votes = $result["total_votes"];
-            $event_name = $result["event_name"];
-
-            $isOneTime = false;
-            $exact_date = '';
-
-            $timing = '';
-            $days = array();
-
-            // If one time event
-            $query = "SELECT * FROM one_time_event";
+        } else {
+            $query = "SELECT * FROM event";
             $statement = $db->prepare($query);
             $statement->execute();
-            $results_onetime = $statement->fetchAll();
+            $results = $statement->fetchAll();
             $statement->closeCursor();
-            foreach($results_onetime as $result_onetime)
-            {
-                if ($eventID == $result_onetime['eventID']) {
-                    $exact_date = $result_onetime['exact_date'];
-                    $isOneTime = true;
-                }
-            }
 
-            if ($isOneTime == false) {
-                $query = "SELECT * FROM recurring_event";
+            // output data of each row
+            $count = 0;
+            echo "<br>";
+            foreach ($results as $result) {
+                $eventID = $result["eventID"];
+                $location = $result["location"];
+                $startTime = $result["startTime"];
+                $endTime = $result["endTime"];
+                $userID = $result["userID"];
+                $total_votes = $result["total_votes"];
+                $event_name = $result["event_name"];
+
+                $isOneTime = false;
+                $exact_date = '';
+
+                $timing = '';
+                $days = array();
+
+                // If one time event
+                $query = "SELECT * FROM one_time_event";
                 $statement = $db->prepare($query);
                 $statement->execute();
-                $results_rec = $statement->fetchAll();
+                $results_onetime = $statement->fetchAll();
                 $statement->closeCursor();
-                foreach ($results_rec as $result_rec) {
-                    if ($eventID == $result_rec['eventID']) {
-                        $timing = $result_rec['timing'];
+                foreach ($results_onetime as $result_onetime) {
+                    if ($eventID == $result_onetime['eventID']) {
+                        $exact_date = $result_onetime['exact_date'];
+                        $isOneTime = true;
                     }
                 }
 
-                $query = "SELECT * FROM recurring_event_days_occurring";
-                $statement = $db->prepare($query);
-                $statement->execute();
-                $results_d = $statement->fetchAll();
-                $statement->closeCursor();
-                foreach ($results_d as $result_d) {
-                    if ($eventID == $result_d['eventID']) {
-                        array_push($days, $result_d['day']);
+                if ($isOneTime == false) {
+                    $query = "SELECT * FROM recurring_event";
+                    $statement = $db->prepare($query);
+                    $statement->execute();
+                    $results_rec = $statement->fetchAll();
+                    $statement->closeCursor();
+                    foreach ($results_rec as $result_rec) {
+                        if ($eventID == $result_rec['eventID']) {
+                            $timing = $result_rec['timing'];
+                        }
+                    }
+
+                    $query = "SELECT * FROM recurring_event_days_occurring";
+                    $statement = $db->prepare($query);
+                    $statement->execute();
+                    $results_d = $statement->fetchAll();
+                    $statement->closeCursor();
+                    foreach ($results_d as $result_d) {
+                        if ($eventID == $result_d['eventID']) {
+                            array_push($days, $result_d['day']);
+                        }
                     }
                 }
-            }
 
-            /**** ADD EVENTS TO THE PAGE *****/
-            echo "<div class='container'>";
-            echo "<div class='card'>
+                /**** ADD EVENTS TO THE PAGE *****/
+                echo "<div class='container'>";
+                echo "<div class='card'>
                     <div class='card-body'>
                         <p>Event Name: " . $event_name . "</p>
                         <p>Location: " . $location . "</p>
                         <p>Start time: " . $startTime . "</p>
                         <p>End time: " . $endTime . "</p>
                         <p>Votes: " . $total_votes . "</p>";
-            if ($isOneTime) {
-                echo "<p>Date: " . $exact_date . "</p>";
-            } else {
-                echo "<p>Timing: " . $timing . "</p>";
-                echo "<p>Days: ";
-                foreach ($days as $day) {
-                    echo $day . " ";
+                if ($isOneTime) {
+                    echo "<p>Date: " . $exact_date . "</p>";
+                } else {
+                    echo "<p>Timing: " . $timing . "</p>";
+                    echo "<p>Days: ";
+                    foreach ($days as $day) {
+                        echo $day . " ";
+                    }
+                    echo "</p>";
                 }
-                echo "</p>";
-            }
 
-            echo "<form action='uvafooddeals.php' method='post'>
+                echo "<form action='uvafooddeals.php' method='post'>
                             <button class='btn btn-primary' type='submit' name='" . $eventID . "upvote'>Upvote</button>
                             <button class='btn btn-danger' type='submit' name='" . $eventID . "downvote'>Downvote</button>
                             <input type='hidden' id='eventID' name='eventID' value=$eventID>
@@ -112,18 +107,17 @@
                     </div>
                   </div>
             ";
-            echo "</div>";
+                echo "</div>";
 
-            // if upvote button clicked, call upvote function
-            if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST[$eventID . 'upvote']))
-            {
-                upvote();
-            }
+                // if upvote button clicked, call upvote function
+                if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST[$eventID . 'upvote'])) {
+                    upvote();
+                }
 
-            // if downvote button clicked, call downvote function
-            if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST[$eventID . 'downvote']))
-            {
-                downvote();
+                // if downvote button clicked, call downvote function
+                if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST[$eventID . 'downvote'])) {
+                    downvote();
+                }
             }
         }
     }
@@ -236,5 +230,4 @@
         }
         header('Location: uvafooddeals.php'); // refresh after updating vote
     }
-}
 ?>
