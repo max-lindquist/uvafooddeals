@@ -2,6 +2,7 @@
     include('navbar.html');
     include("uvafooddeals.html");
     ob_start();
+    session_start();
 ?>
 
 <?php
@@ -98,15 +99,16 @@
                     echo "</p>";
                 }
 
-                echo "<form action='uvafooddeals.php' method='post'>
+                if(isset($_SESSION['userID'])){
+                    $currentUser = $_SESSION['userID'];
+                    echo "<form action='uvafooddeals.php' method='post'>
                             <button class='btn btn-primary' type='submit' name='" . $eventID . "upvote'>Upvote</button>
                             <button class='btn btn-danger' type='submit' name='" . $eventID . "downvote'>Downvote</button>
                             <input type='hidden' id='eventID' name='eventID' value=$eventID>
-                            <input type='hidden' id='userID' name='userID' value=$userID>
-                        </form>
-                    </div>
-                  </div>
-            ";
+                            <input type='hidden' id='userID' name='userID' value=$currentUser>
+                          </form>";}
+                echo"</div>
+                </div>";
                 echo "</div>";
 
                 // if upvote button clicked, call upvote function
