@@ -4,10 +4,10 @@
 $hostname = 'localhost:3306';
 
 // database name
-$dbname = 'food_deals';
+$dbname = 'food_deals'; // REPLACE WITH YOUR DATABASE NAME
 
 // database credentials
-$username = 'root';
+$username = 'root'; // REPLACE WITH YOUR CREDENTIALS 
 $password = '';
 
 // DSN (Data Source Name) specifies the host computer for the MySQL database
