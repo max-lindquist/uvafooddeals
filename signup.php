@@ -1,8 +1,8 @@
 <?php 
+    session_start();
+
     require("navbar.html");
     require("signup.html");
-
-    session_start();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username_input = $_POST['username'];
