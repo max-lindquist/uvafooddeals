@@ -29,22 +29,22 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `event` (
-  `eventID` int(6) NOT NULL,
+  `eventID` int(6) NOT NULL AUTO_INCREMENT,
   `startTime` time DEFAULT NULL,
   `endTime` time DEFAULT NULL,
   `location` varchar(500) NOT NULL,
   `userID` int(6) NOT NULL,
   `total_votes` int(6) NOT NULL, 
-  `event_name` varchar(500) NOT NULL
-  CONSTRAINT checkTime CHECK (`endTime` > `startTime`)
+  `event_name` varchar(500) NOT NULL,
+  CONSTRAINT checkTime CHECK (`endTime` > `startTime`), 
+  PRIMARY KEY (`eventID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `event`
 --
-
 INSERT INTO `event` (`eventID`, `startTime`, `endTime`, `location`, `userID`, `total_votes`, `event_name`) VALUES
-(200067, '10:00:00', '12:00:00', 'max\'s house', 300000, 0, "free pizza");
+(200067, '10:00:00', '12:00:00', "max's house", 300000, 0, "free pizza");
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ INSERT INTO `host` (`hostID`, `name`, `email`) VALUES
 (100000, 'Student Council', NULL),
 (100001, 'Photography Club', 'photography@virginia.edu'),
 (100002, 'Music Club', NULL),
-(100003, 'Bodo\'s Bagels', 'bodos@gmail.com'),
+(100003, "Bodo's Bagels", 'bodos@gmail.com'),
 (100004, 'Mellow Mushroom Pizza', NULL);
 
 -- --------------------------------------------------------
@@ -163,9 +163,10 @@ INSERT INTO `recurring_event_days_occurring` (`eventID`, `day`) VALUES
 --
 
 CREATE TABLE `registered_user` (
-  `userID` int(6) NOT NULL,
+  `userID` int(6) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL
+  `password` varchar(50) NOT NULL,
+  PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -234,7 +235,6 @@ CREATE TABLE `sponsors` (
 --
 
 INSERT INTO `sponsors` (`eventID`, `hostID`) VALUES
-(200000, 100000),
 (200001, 100000),
 (200002, 100000),
 (200003, 100001),
@@ -266,7 +266,7 @@ CREATE TABLE `votes` (
 --
 
 INSERT INTO `votes` (`eventID`, `userID`, `upvote`, `downvote`) VALUES
-(200000, 300001, 1, 0),
+(200067, 300001, 1, 0),
 (200001, 300001, 1, 0),
 (200001, 300002, 1, 0),
 (200002, 300001, 1, 0),
@@ -289,8 +289,10 @@ INSERT INTO `votes` (`eventID`, `userID`, `upvote`, `downvote`) VALUES
 --
 -- Indexes for table `event`
 --
+/*
 ALTER TABLE `event`
   ADD PRIMARY KEY (`eventID`);
+  */
 
 --
 -- Indexes for table `host`
@@ -325,8 +327,10 @@ ALTER TABLE `recurring_event_days_occurring`
 --
 -- Indexes for table `registered_user`
 --
+/*
 ALTER TABLE `registered_user`
   ADD PRIMARY KEY (`userID`);
+  */
 
 --
 -- Indexes for table `restaurant`
@@ -382,18 +386,31 @@ COMMIT;
 -- Trigger
 
 DELIMITER $$
-CREATE TRIGGER voteTrigger
-AFTER UPDATE, INSERT ON votes 
+CREATE TRIGGER voteTriggerUpdate
+AFTER UPDATE ON votes 
 FOR EACH ROW
-BEGIN
-        DELETE FROM one_time_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = one_time_event.eventID;
-        DELETE FROM recurring_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event.eventID;
-        DELETE FROM recurring_event_days_occurring WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event_days_occurring.eventID;
-        DELETE FROM votes WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= votes.eventID;
-        DELETE FROM sponsors WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= sponsors.eventID;
-        DELETE FROM event WHERE event.total_votes <= -10;
-END
+  BEGIN
+    DELETE FROM one_time_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = one_time_event.eventID;
+    DELETE FROM recurring_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event.eventID;
+    DELETE FROM recurring_event_days_occurring WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event_days_occurring.eventID;
+    DELETE FROM votes WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= votes.eventID;
+    DELETE FROM sponsors WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= sponsors.eventID;
+    DELETE FROM event WHERE event.total_votes <= -10;
+  END
+$$
+DELIMITER ;
 
-
+DELIMITER $$
+CREATE TRIGGER voteTriggerInsert
+AFTER INSERT ON votes 
+FOR EACH ROW
+  BEGIN
+    DELETE FROM one_time_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = one_time_event.eventID;
+    DELETE FROM recurring_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event.eventID;
+    DELETE FROM recurring_event_days_occurring WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event_days_occurring.eventID;
+    DELETE FROM votes WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= votes.eventID;
+    DELETE FROM sponsors WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= sponsors.eventID;
+    DELETE FROM event WHERE event.total_votes <= -10;
+  END
 $$
 DELIMITER ;
