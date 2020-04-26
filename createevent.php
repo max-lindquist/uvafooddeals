@@ -9,17 +9,17 @@
     if (isset($_SESSION['userID'])) {
         createEvent();
     } else {
-        echo "<div class='container'>Please log in or sign up first.</div>";
+        echo "<div class='alert alert-danger'>Please log in or sign up first.</div>";
     }
  
     function createEvent() {
-        include('createevent.html');
+        $msg = "";
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $startTime = $_POST['StartTime'];
             $endTime = $_POST['EndTime'];
             if ($endTime < $startTime) {
-                echo "<div class='container' style='color:red;'>Error: start time and end time are inconsistent. Please use 24-hour time.</div>";
+                $msg = "<div class='alert alert-danger'>Error: start time and end time are inconsistent. Please use 24-hour time.</div>";
             } else {
                 $connection = require('uvafooddeals-connectdb.php');
                 $startTime = $_POST['StartTime'];
@@ -174,6 +174,7 @@
                 }
             }
         }
+        include('createevent.html');
     }
 
 
