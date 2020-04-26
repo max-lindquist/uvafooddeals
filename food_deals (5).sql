@@ -36,6 +36,7 @@ CREATE TABLE `event` (
   `userID` int(6) NOT NULL,
   `total_votes` int(6) NOT NULL, 
   `event_name` varchar(500) NOT NULL
+  CONSTRAINT checkTime CHECK (`endTime` > `startTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -377,3 +378,22 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- Trigger
+
+DELIMITER $$
+CREATE TRIGGER voteTrigger
+AFTER UPDATE, INSERT ON votes 
+FOR EACH ROW
+BEGIN
+        DELETE FROM one_time_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = one_time_event.eventID;
+        DELETE FROM recurring_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event.eventID;
+        DELETE FROM recurring_event_days_occurring WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event_days_occurring.eventID;
+        DELETE FROM votes WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= votes.eventID;
+        DELETE FROM sponsors WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= sponsors.eventID;
+        DELETE FROM event WHERE event.total_votes <= -10;
+END
+
+
+$$
+DELIMITER ;
