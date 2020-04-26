@@ -71,17 +71,3 @@
         }
     }
 ?>
-
-<?php
-    function updateName(){
-        $event_name = $_POST['Name'];
-        $eventID = $_GET['eventID'];
-        $query = "UPDATE event SET event_name = :event_name WHERE eventID = :eventID";
-        $statement = $db->prepare($query);
-        $statement->bindValue(':event_name', $event_name);
-        $statement->bindValue(':eventID', $eventID);
-        $statement->execute();
-        $statement->closeCursor();
-    }
-
-?>
