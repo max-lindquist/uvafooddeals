@@ -179,7 +179,7 @@ INSERT INTO `recurring_event_days_occurring` (`eventID`, `day`) VALUES
 CREATE TABLE `registered_user` (
   `userID` int(6) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(64) NOT NULL,
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -188,17 +188,29 @@ CREATE TABLE `registered_user` (
 --
 
 INSERT INTO `registered_user` (`userID`, `name`, `password`) VALUES
-(300000, 'Abby', 'password'),
-(300001, 'Bob', '123thisismypassword'),
-(300002, 'Claire', '12345:-)'),
-(300003, 'Dan', 'Dan300003'),
-(300004, 'Charlie', 'char345'),
-(300005, 'Alice', 'AisForAlice'),
-(300006, 'Samy', 'SamIAm'),
-(300007, 'Kylie', '123456789'),
-(300008, 'Josh', 'pass'),
-(300009, 'Lauren', 'thisissafe'),
-(300010, 'Admin', 'Admin123');
+(300000, 'Abby', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'),
+(300001, 'Bob', '3d8bb29caec77d2eaf1d357c63d77d989c0391c53215bb881742b13aff93cc7d'),
+(300002, 'Claire', '11da47786653a4b96846b95bc67f74c260e904e40b8d5c03ea0648b6f99d9379'),
+(300003, 'Dan', '0f78d023a91e09c0e598b5b4e03767c4b5db232e31fac8c6a9b1bf87a4afb0ce'),
+(300004, 'Charlie', 'c2532f1a059c00e42ae966223024be933d2813a39b6820b78b74da84f9a4b96f'),
+(300005, 'Alice', 'f3071140b8a7bfb8d94cd0d04d50b0056e7f727f0e295572331b0f50b03b640b'),
+(300006, 'Samy', 'c66c2be7d968fd62e63874fc64179cc558e038a8314ddd735c45a91ff35913bd'),
+(300007, 'Kylie', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225'),
+(300008, 'Josh', 'd74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1'),
+(300009, 'Lauren', '04995257f6d6379791e7754c0c358bda2bf7c0917fb3d60f4eebacfc8f2c9b8e'),
+(300010, 'Admin', '3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2');
+
+-- Abby : password
+-- Bob : 123thisismypassword
+-- Claire : 12345:-)
+-- Dan : Dan300003
+-- Charlie : char 345
+-- Alice : AisForAlice
+-- Samy : SamIAm
+-- Kylie : 123456789
+-- Josh : pass
+-- Lauren : thisissafe
+-- Admin : Admin123
 
 -- --------------------------------------------------------
 

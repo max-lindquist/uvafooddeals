@@ -10,11 +10,12 @@
 
         if ($password_input == $confirm_password) {
             require('uvafooddeals-connectdb.php');
+            $password = hash('sha256', $_POST['pwd']);
 
             $query = "INSERT INTO registered_user (name, password) VALUES (:name, :password)";
             $statement = $db->prepare($query);
             $statement->bindValue(':name', $username_input); // placeholder, value
-            $statement->bindValue(':password', $password_input);
+            $statement->bindValue(':password', $password);
             $statement->execute();
             $statement->closeCursor();
     
