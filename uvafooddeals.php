@@ -8,7 +8,7 @@
 <?php
     require('uvafooddeals-connectdb.php');
 
-    $query = "SELECT COUNT(*) FROM event";
+    $query = "SELECT COUNT(*) FROM event NATURAL JOIN sponsors NATURAL JOIN host";
 
     $statement = $db->prepare($query);
     $statement->execute();
