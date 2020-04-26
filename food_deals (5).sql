@@ -429,7 +429,7 @@ CREATE TRIGGER voteTriggerInsert
 AFTER INSERT ON votes 
 FOR EACH ROW
   BEGIN
-    DELETE FROM event WHERE total_votes <= -9;
+    DELETE FROM event WHERE total_votes <= -10;
   END
 $$
 DELIMITER ;
@@ -439,7 +439,7 @@ CREATE TRIGGER voteTriggerUpdate
 AFTER UPDATE ON votes 
 FOR EACH ROW
   BEGIN
-    DELETE FROM event WHERE total_votes <= -9;
+    DELETE FROM event WHERE total_votes <= -10;
   END
 $$
 DELIMITER ;
