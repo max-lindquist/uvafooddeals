@@ -4,11 +4,13 @@
     ob_start();
     session_start();
 ?>
-
+<style><?php
+    include('uvafooddeals.css'); ?>
+</style>
 <?php
     require('uvafooddeals-connectdb.php');
 
-    $query = "SELECT COUNT(*) FROM event";
+    $query = "SELECT COUNT(*) FROM event NATURAL JOIN sponsors NATURAL JOIN host";
 
     $statement = $db->prepare($query);
     $statement->execute();
@@ -103,14 +105,12 @@
                 echo "<div class='container'>";
                 echo "<div class='card'>
                     <div class='card-body'>
-                        <p>Event Name: " . $event_name . "</p>
+                        <h1>Event Name: " . $event_name . "</h1>
                         <p>Location: " . $location . "</p>
-                        <p>Hosted By: " . $host . "</p>
-                        <p>Start time: " . $startTime . "</p>
-                        <p>End time: " . $endTime . "</p>
-                        <p>Votes: " . $total_votes . "</p>";
+                        <p>Hosted By: " . $host . "</p>";
+
                 if ($isOneTime) {
-                    echo "<p>Date: " . $exact_date . "</p>";
+                    echo "<p>Date: " . date('F d, Y ', strtotime($exact_date)) . "</p>";
                 } else {
                     echo "<p>Timing: " . $timing . "</p>";
                     echo "<p>Days: ";
@@ -119,21 +119,25 @@
                     }
                     echo "</p>";
                 }
+                echo "<p>" . date('h:i A', strtotime($startTime)) . ' - ' . date('h:i A', strtotime($endTime)) . "</p>";
 
                 if(isset($_SESSION['userID'])){
                     $currentUser = $_SESSION['userID'];
-                    echo "<form action='uvafooddeals.php' method='post'>
-                            <button class='btn btn-primary' type='submit' name='" . $eventID . "upvote'>Upvote</button>
-                            <button class='btn btn-danger' type='submit' name='" . $eventID . "downvote'>Downvote</button>
+                    echo "<p style='position:absolute; right:9%; top:47%;color:#17a2b8; font-weight:bold;'>$total_votes</p>";
+                    echo "<br><form action='uvafooddeals.php' method='post'>
+                            <button class='btn btn-primary' type='submit' name='" . $eventID . "upvote' style='
+    background: url(up.png); border: 0; display: block; height: 100;width: 100;position:absolute;right:5%;top:19%;'></button>
+                            <button class='btn btn-danger' type='submit' name='" . $eventID . "downvote' style='
+    background: url(down.png); border: 0; display: block; height: 100;width: 100;position:absolute;right:5%;top:50%'></button>
                             <input type='hidden' id='eventID' name='eventID' value=$eventID>
                             <input type='hidden' id='userID' name='userID' value=$currentUser>";
                     if ($userID == $_SESSION['userID']) {
-                      echo "<button class='btn btn-dark' name='" . $eventID . "delete'>Delete</button>";
+                      echo "<button id='delete' class='btn btn-dark' name='" . $eventID . "delete'>Delete</button>";
                     }
                     echo "</form>";}
                     if($userPosted){
                     echo "<form action='updateevent.php' method='get'>
-                            <button class='btn btn-info' type='submit' name='" . $eventID . "update'>Update</button>
+                            <button id='update' class='btn btn-info' type='submit' name='" . $eventID . "update'>Update</button>
                             <input type='hidden' id='eventID' name='eventID' value=$eventID>
                             <input type='hidden' id='userID' name='userID' value=$userID>
                             <input type='hidden' id='isOneTime' name='isOneTime' value=$isOneTime>

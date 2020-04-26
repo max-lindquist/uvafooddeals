@@ -1,6 +1,6 @@
 <?php 
     // Author: Alyse Armentrout, Vivian Pham, Max Lindquist, Emily Lin
-    require("navbar.html");
+    require("navbar2.html");
 
     require("uvafooddeals-connectdb.php");
 
@@ -8,7 +8,7 @@
     $msg = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username_input = $_POST['username'];
-        $password_input = $_POST['pwd'];
+        $password_input = hash('sha256', $_POST['pwd']);
     
         $query = "SELECT * FROM registered_user";
         $statement = $db->prepare($query);

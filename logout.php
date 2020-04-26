@@ -1,5 +1,5 @@
 <?php 
-    require("navbar.html");
+    require("navbar2.html");
     require("logout.html");
 
     session_start();
