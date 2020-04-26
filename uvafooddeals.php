@@ -18,7 +18,7 @@
         if ($num_row['COUNT(*)'] == 0) {
             echo "<center><h4>You have no events! Add an event by clicking the button above.</h4></center>";
         } else {
-            $query = "SELECT * FROM event";
+            $query = "SELECT * FROM event NATURAL JOIN sponsors NATURAL JOIN host";
             $statement = $db->prepare($query);
             $statement->execute();
             $results = $statement->fetchAll();
@@ -35,6 +35,7 @@
                 $userID = $result["userID"];
                 $total_votes = $result["total_votes"];
                 $event_name = $result["event_name"];
+                $host = $result["name"];
 
                 $isOneTime = false;
                 $exact_date = '';
@@ -92,6 +93,7 @@
                     <div class='card-body'>
                         <p>Event Name: " . $event_name . "</p>
                         <p>Location: " . $location . "</p>
+                        <p>Hosted By: " . $host . "</p>
                         <p>Start time: " . $startTime . "</p>
                         <p>End time: " . $endTime . "</p>
                         <p>Votes: " . $total_votes . "</p>";
@@ -260,6 +262,7 @@
         require('uvafooddeals-connectdb.php');
         global $db;
         $eventID = $_POST['eventID'];
+        $hostID = $_POST['hostID'];
 
         // Delete from event
         $query = "DELETE FROM event WHERE eventID = :eventID";
@@ -284,6 +287,13 @@
 
         // Delete from recurring_event_days_occurring 
         $query = "DELETE FROM recurring_event_days_occurring WHERE eventID = :eventID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':eventID', $eventID);
+        $statement->execute();
+        $statement->closeCursor();
+
+        // Delete from sponsors
+        $query = "DELETE FROM sponsors WHERE eventID = :eventID";
         $statement = $db->prepare($query);
         $statement->bindValue(':eventID', $eventID);
         $statement->execute();
