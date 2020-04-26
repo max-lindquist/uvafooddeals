@@ -386,20 +386,26 @@ COMMIT;
 -- Trigger
 
 DELIMITER $$
-CREATE TRIGGER voteTriggerUpdate
-AFTER UPDATE ON votes 
+CREATE TRIGGER voteTriggerInsert
+AFTER INSERT ON votes 
 FOR EACH ROW
   BEGIN
-    DELETE FROM one_time_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = one_time_event.eventID;
-    DELETE FROM recurring_event WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event.eventID;
-    DELETE FROM recurring_event_days_occurring WHERE (SELECT eventID FROM event WHERE total_votes <= -10) = recurring_event_days_occurring.eventID;
-    DELETE FROM votes WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= votes.eventID;
-    DELETE FROM sponsors WHERE (SELECT eventID FROM event WHERE total_votes <= -10)= sponsors.eventID;
-    DELETE FROM event WHERE event.total_votes <= -10;
+    DELETE FROM event WHERE total_votes <= -9;
   END
 $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER voteTriggerUpdate
+AFTER UPDATE ON votes 
+FOR EACH ROW
+  BEGIN
+    DELETE FROM event WHERE total_votes <= -9;
+  END
+$$
+DELIMITER ;
+
+/*
 DELIMITER $$
 CREATE TRIGGER voteTriggerInsert
 AFTER INSERT ON votes 
@@ -414,3 +420,4 @@ FOR EACH ROW
   END
 $$
 DELIMITER ;
+*/
