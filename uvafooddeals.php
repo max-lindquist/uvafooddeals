@@ -1,5 +1,5 @@
 <?php
-    include('navbar.html');
+    include('navbar2.html');
     include("uvafooddeals.html");
     ob_start();
     session_start();
@@ -9,6 +9,7 @@
     require('uvafooddeals-connectdb.php');
 
     $query = "SELECT COUNT(*) FROM event";
+
     $statement = $db->prepare($query);
     $statement->execute();
     $num_rows = $statement->fetchAll(); 
@@ -18,7 +19,17 @@
         if ($num_row['COUNT(*)'] == 0) {
             echo "<center><h4>You have no events! Add an event by clicking the button above.</h4></center>";
         } else {
+
+            if(array_key_exists('popularity', $_POST))
+            {
+            $query = "SELECT * FROM event NATURAL JOIN sponsors NATURAL JOIN host ORDER BY total_votes DESC";
+            }
+
+            else
+            {
             $query = "SELECT * FROM event NATURAL JOIN sponsors NATURAL JOIN host";
+            }
+
             $statement = $db->prepare($query);
             $statement->execute();
             $results = $statement->fetchAll();
