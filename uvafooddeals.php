@@ -70,10 +70,11 @@
                 }
 
                 // If user logged in was poster
-                if($_SESSION['userID']== $userID){
-                    $userPosted = true;
+                if (isset($_SESSION['userID'])) {
+                    if($_SESSION['userID']== $userID){
+                        $userPosted = true;
+                    }
                 }
-
                 if ($isOneTime == false) {
                     $query = "SELECT * FROM recurring_event";
                     $statement = $db->prepare($query);
