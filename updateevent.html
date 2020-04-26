@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Alyse Armentrout, Vivian Pham, Max Lindquist, Emily Lin">
+        <meta name="description" content="UVA food deals CS 4750 project">
+        <title>Create Event</title> 
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="createevent.css" /> 
+    </head>
+
+    <body>
+
+        <br>
+        <div class="container">
+                <h1>Update an Event</h1>
+            <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
+                <div class="form-group">
+                    <label>Event Name: </label>
+                    <input type="text" class="form-control" name="Name" autofocus/>
+                </div>
+                
+                <div class="form-group">
+                    <label>Location: </label>
+                    <input type="text" class="form-control" id = "Location" name = "Location" />
+                </div>
+                
+                <div class="form-group">
+                    <label>Date (Please use format YYYY-MM-DD): </label>
+                    <input type="date" class="form-control" name = "Date" />
+                </div>
+
+                <div class="form-group">
+                    <label>Start Time: </label>
+                    <input type="time" class="form-control" name = "StartTime" />
+                </div>
+                
+                <div class="form-group">
+                    <label>End Time: </label>
+                    <input type="time" class="form-control" name = "EndTime" />
+                </div>
+
+                <div class="form-group">
+                    <label>Restaurant Name: </label>
+                    <input type="text" class="form-control" name = "Restaurant" />
+                </div>
+
+                <input type="submit" class="btn btn-primary"></input><br><br>
+            </form>
+        </div>
+
+        <script src="createevent.js"></script>
+    </body>
+</html>

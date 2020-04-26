@@ -39,6 +39,8 @@
                 $isOneTime = false;
                 $exact_date = '';
 
+                $userPosted = false;
+
                 $timing = '';
                 $days = array();
 
@@ -53,6 +55,11 @@
                         $exact_date = $result_onetime['exact_date'];
                         $isOneTime = true;
                     }
+                }
+
+                // If user logged in was poster
+                if($_SESSION['userID']== $userID){
+                    $userPosted = true;
                 }
 
                 if ($isOneTime == false) {
@@ -110,6 +117,14 @@
                       echo "<button class='btn btn-dark' name='" . $eventID . "delete'>Delete</button>";
                     }
                     echo "</form>";}
+                    if($userPosted){
+                    echo "<form action='updateevent.php' method='get'>
+                            <button class='btn btn-info' type='submit' name='" . $eventID . "update'>Update</button>
+                            <input type='hidden' id='eventID' name='eventID' value=$eventID>
+                            <input type='hidden' id='userID' name='userID' value=$userID>
+                            <input type='hidden' id='isOneTime' name='isOneTime' value=$isOneTime>
+                            </form>";
+                    }
                 echo"</div>
                 </div>";
                 echo "</div>";
