@@ -2,8 +2,7 @@
     session_start();
 
     require("navbar.html");
-    require("signup.html");
-
+    $msg = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username_input = $_POST['username'];
         $password_input = $_POST['pwd'];
@@ -19,9 +18,10 @@
             $statement->execute();
             $statement->closeCursor();
     
-            echo "<div class='container'>You have successfully signed up. Go to the login page to log in.</div>";
+            $msg = "<div class='alert alert-success' style='text-align:center'>You have successfully signed up. Go to the login page to log in.</div>";
         } else {
-            echo "<div class='container' style='color: red;'>Passwords do not match. Please try again.</div>";
+            $msg = "<div class='alert alert-danger' style='text-align:center'>Passwords do not match. Please try again.</div>";
         }
     }
+    require("signup.html");
 ?>

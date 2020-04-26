@@ -7,43 +7,43 @@
         <meta name="description" content="UVA food deals CS 4750 project">
         <title>Create Event</title> 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link rel="stylesheet" href="createevent.css" /> 
+        <link rel="stylesheet" href="createevent.css" />
     </head>
 
     <body>
-
-        <br>
+    <?php if($done) echo $msg;?>
+    <br>
         <div class="container">
                 <h1>Update an Event</h1>
             <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
                 <div class="form-group">
                     <label>Event Name: </label>
-                    <input type="text" class="form-control" name="Name" autofocus/>
+                    <input type="text" class="form-control" name="Name" value="<?php echo $r['event_name']?>"autofocus/>
                 </div>
                 
                 <div class="form-group">
                     <label>Location: </label>
-                    <input type="text" class="form-control" id = "Location" name = "Location" />
+                    <input type="text" class="form-control" id = "Location" name = "Location" value = "<?php echo $r['location']?>"/>
                 </div>
                 
                 <div class="form-group">
                     <label>Date (Please use format YYYY-MM-DD): </label>
-                    <input type="date" class="form-control" name = "Date" />
+                    <input type="date" class="form-control" name = "Date" value = "<?php echo $e['exact_date']?>"/>
                 </div>
 
                 <div class="form-group">
                     <label>Start Time: </label>
-                    <input type="time" class="form-control" name = "StartTime" />
+                    <input type="time" class="form-control" name = "StartTime" value = "<?php echo $r['startTime']?>"/>
                 </div>
                 
                 <div class="form-group">
                     <label>End Time: </label>
-                    <input type="time" class="form-control" name = "EndTime" />
+                    <input type="time" class="form-control" name = "EndTime" value = "<?php echo $r['endTime']?>"/>
                 </div>
 
                 <div class="form-group">
-                    <label>Restaurant Name: </label>
-                    <input type="text" class="form-control" name = "Restaurant" />
+                    <label>Host Name: </label>
+                    <input type="text" class="form-control" name = "Host" value="<?php echo $h['name']?>"/>
                 </div>
 
                 <input type="submit" class="btn btn-primary"></input><br><br>
