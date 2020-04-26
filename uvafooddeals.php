@@ -105,8 +105,11 @@
                             <button class='btn btn-primary' type='submit' name='" . $eventID . "upvote'>Upvote</button>
                             <button class='btn btn-danger' type='submit' name='" . $eventID . "downvote'>Downvote</button>
                             <input type='hidden' id='eventID' name='eventID' value=$eventID>
-                            <input type='hidden' id='userID' name='userID' value=$currentUser>
-                          </form>";}
+                            <input type='hidden' id='userID' name='userID' value=$currentUser>";
+                    if ($userID == $_SESSION['userID']) {
+                      echo "<button class='btn btn-dark' name='" . $eventID . "delete'>Delete</button>";
+                    }
+                    echo "</form>";}
                 echo"</div>
                 </div>";
                 echo "</div>";
@@ -119,6 +122,11 @@
                 // if downvote button clicked, call downvote function
                 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST[$eventID . 'downvote'])) {
                     downvote();
+                }
+
+                // if delete button clicked, call delete function
+                if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST[$eventID . 'delete'])) {
+                    deleteEvent();
                 }
             }
         }
@@ -230,6 +238,42 @@
             $statement->execute();
             $statement->closeCursor();
         }
+        header('Location: uvafooddeals.php'); // refresh after updating vote
+    }
+
+    function deleteEvent() {
+        require('uvafooddeals-connectdb.php');
+        global $db;
+        $eventID = $_POST['eventID'];
+
+        // Delete from event
+        $query = "DELETE FROM event WHERE eventID = :eventID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':eventID', $eventID);
+        $statement->execute();
+        $statement->closeCursor();
+
+        // Delete from one_time_event
+        $query = "DELETE FROM one_time_event WHERE eventID = :eventID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':eventID', $eventID);
+        $statement->execute();
+        $statement->closeCursor();
+
+        // Delete from recurring_event
+        $query = "DELETE FROM recurring_event WHERE eventID = :eventID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':eventID', $eventID);
+        $statement->execute();
+        $statement->closeCursor();
+
+        // Delete from recurring_event_days_occurring 
+        $query = "DELETE FROM recurring_event_days_occurring WHERE eventID = :eventID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':eventID', $eventID);
+        $statement->execute();
+        $statement->closeCursor();
+
         header('Location: uvafooddeals.php'); // refresh after updating vote
     }
 ?>
