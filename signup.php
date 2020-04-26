@@ -1,7 +1,7 @@
 <?php 
     session_start();
 
-    require("navbar.html");
+    require("navbar2.html");
     $msg = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username_input = $_POST['username'];

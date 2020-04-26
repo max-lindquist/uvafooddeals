@@ -1,7 +1,7 @@
 <?php session_start(); ?>
 
 <?php
-    include('navbar.html');
+    include('navbar2.html');
 ?>
 
 <?php
