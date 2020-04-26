@@ -14,11 +14,9 @@
  
     function updateEvent() {
         include('updateevent.html');
+        global $db;
         
-
-
-
-        if ($_SERVER['REQUEST_METHOD'] == "POST")
+    if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
             $connection = require('uvafooddeals-connectdb.php');
             $eventID = $_GET['eventID'];
@@ -29,6 +27,8 @@
             $exact_date = $_POST['Date'];
             
             if(!empty($event_name)){
+                $event_name = $_POST['Name'];
+                $eventID = $_GET['eventID'];
                 $query = "UPDATE event SET event_name = :event_name WHERE eventID = :eventID";
                 $statement = $db->prepare($query);
                 $statement->bindValue(':event_name', $event_name);
@@ -70,6 +70,18 @@
             }
         }
     }
+?>
 
+<?php
+    function updateName(){
+        $event_name = $_POST['Name'];
+        $eventID = $_GET['eventID'];
+        $query = "UPDATE event SET event_name = :event_name WHERE eventID = :eventID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':event_name', $event_name);
+        $statement->bindValue(':eventID', $eventID);
+        $statement->execute();
+        $statement->closeCursor();
+    }
 
 ?>
