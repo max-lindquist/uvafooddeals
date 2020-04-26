@@ -27,7 +27,7 @@
 
             else
             {
-            $query = "SELECT * FROM event NATURAL JOIN sponsors NATURAL JOIN host";
+            $query = "SELECT * FROM event NATURAL JOIN sponsors NATURAL JOIN host ORDER BY eventID DESC";
             }
 
             $statement = $db->prepare($query);
