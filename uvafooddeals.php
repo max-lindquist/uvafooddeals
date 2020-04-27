@@ -184,6 +184,12 @@
 
         if($statement->rowCount() > 0) { // if user already voted on event
            if($results['upvote'] != 1) { // downvoted but want to change to upvote
+               $query = "UPDATE event SET total_votes = total_votes + 1 WHERE eventID = :eventID";
+               $statement = $db->prepare($query);
+               $statement->bindValue(':eventID', $eventID);
+               $statement->execute();
+               $statement->closeCursor();
+
                $query = "UPDATE votes SET upvote = 1 WHERE eventID = :eventID AND userID = :userID";
                $statement = $db->prepare($query);
                $statement->bindValue(':eventID', $eventID);
@@ -195,26 +201,20 @@
                $statement->bindValue(':eventID', $eventID);
                $statement->bindValue(':userID', $userID);
                $statement->execute();
-
-               $query = "UPDATE event SET total_votes = total_votes + 1 WHERE eventID = :eventID";
-               $statement = $db->prepare($query);
-               $statement->bindValue(':eventID', $eventID);
-               $statement->execute();
-               $statement->closeCursor();
            }
         }
         else{
+            $query = "UPDATE event SET total_votes = total_votes + 1 WHERE eventID = :eventID";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':eventID', $eventID);
+            $statement->execute();
+            $statement->closeCursor();
+
             $query = "INSERT INTO votes VALUES(:eventID, :userID, 1, 0)";
             $statement = $db->prepare($query);
             $statement->bindValue(':eventID', $eventID);
             $statement->bindValue(':userID', $userID);
 
-            $statement->execute();
-            $statement->closeCursor();
-
-            $query = "UPDATE event SET total_votes = total_votes + 1 WHERE eventID = :eventID";
-            $statement = $db->prepare($query);
-            $statement->bindValue(':eventID', $eventID);
             $statement->execute();
             $statement->closeCursor();
         }
@@ -237,6 +237,12 @@
         $statement->closeCursor();
         if($statement->rowCount() > 0) { // if user already voted on event
             if($results['downvote'] != 1) { // upvoted but want to change to downvote
+                $query = "UPDATE event SET total_votes = total_votes - 1 WHERE eventID = :eventID";
+                $statement = $db->prepare($query);
+                $statement->bindValue(':eventID', $eventID);
+                $statement->execute();
+                $statement->closeCursor();
+
                 $query = "UPDATE votes SET upvote = 0 WHERE eventID = :eventID AND userID = :userID";
                 $statement = $db->prepare($query);
                 $statement->bindValue(':eventID', $eventID);
@@ -248,26 +254,20 @@
                 $statement->bindValue(':eventID', $eventID);
                 $statement->bindValue(':userID', $userID);
                 $statement->execute();
-
-                $query = "UPDATE event SET total_votes = total_votes - 1 WHERE eventID = :eventID";
-                $statement = $db->prepare($query);
-                $statement->bindValue(':eventID', $eventID);
-                $statement->execute();
-                $statement->closeCursor();
             }
         }
         else{
+            $query = "UPDATE event SET total_votes = total_votes - 1 WHERE eventID = :eventID";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':eventID', $eventID);
+            $statement->execute();
+            $statement->closeCursor();
+            
             $query = "INSERT INTO votes VALUES(:eventID, :userID, 0, 1)";
             $statement = $db->prepare($query);
             $statement->bindValue(':eventID', $eventID);
             $statement->bindValue(':userID', $userID);
 
-            $statement->execute();
-            $statement->closeCursor();
-
-            $query = "UPDATE event SET total_votes = total_votes - 1 WHERE eventID = :eventID";
-            $statement = $db->prepare($query);
-            $statement->bindValue(':eventID', $eventID);
             $statement->execute();
             $statement->closeCursor();
         }
